@@ -16,16 +16,31 @@ type Article struct {
 
 type ArticleRepo interface {
 	ListArticle(ctx context.Context) ([]*Article, error)
-	GetArticle(ctx context.Context, id int64) (*Article)
+	CreateArticle(ctx context.Context, article *Article) error
 }
 
 type ArticleUsecase struct{
 	repo ArticleRepo
 }
 
-func NewArticleUsecase()  {
-
+func NewArticleUsecase(repo ArticleRepo) *ArticleUsecase {
+	return &ArticleUsecase{
+		repo: repo,
+	}
 }
+
+func (uc *ArticleUsecase) List(ctx context.Context) (ps []*Article, err error) {
+	ps, err = uc.repo.ListArticle(ctx)
+	if err != nil {
+		return
+	}
+	return
+}
+
+func (uc *ArticleUsecase) Create(ctx context.Context, article *Article) error {
+	return uc.repo.CreateArticle(ctx, article)
+}
+
 
 
 
